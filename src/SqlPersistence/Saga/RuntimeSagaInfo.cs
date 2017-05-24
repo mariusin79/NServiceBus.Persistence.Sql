@@ -76,7 +76,8 @@ class RuntimeSagaInfo
                 FillParameter = ParameterFiller.Fill;
                 break;
             case SqlVariant.PostgreSql:
-                TableName = $"{tablePrefix}{tableSuffix}";
+                var tableName = $"{tablePrefix}{tableSuffix}";
+                TableName = tableName.Length <= 63 ? tableName : $"{tableName.Substring(tableName.Length - 63)}";
                 FillParameter = ParameterFiller.Fill;
                 break;
             case SqlVariant.Oracle:

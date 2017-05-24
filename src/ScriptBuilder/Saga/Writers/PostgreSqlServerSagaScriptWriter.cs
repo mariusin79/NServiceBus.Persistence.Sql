@@ -29,7 +29,7 @@ $$ language plpgsql;
 DO $$
 DECLARE tableNameNonQuoted text; sqlStatement text; dataType text; row RECORD;
 BEGIN
-    tableNameNonQuoted = concat(@tablePrefix, '{tableName}');
+    tableNameNonQuoted = right(concat(@tablePrefix, '{tableName}'), 63);
 ");
         }
 
