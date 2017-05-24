@@ -28,8 +28,16 @@ public static class SqlHelpers
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = script;
-                command.AddParameter("tablePrefix", $"{tablePrefix}_");
+                if (command is Npgsql.NpgsqlCommand)
+                {
+                    // postgresql does not support parameters in anonymous code blocks
+                    command.CommandText = script.Replace("@tablePrefix", $"'{tablePrefix.ToLower()}_'");
+                }
+                else
+                {
+                    command.CommandText = script;
+                    command.AddParameter("tablePrefix", $"{tablePrefix}_");
+                }
                 if (command is System.Data.SqlClient.SqlCommand)
                 {
                     command.AddParameter("schema", schema ?? "dbo");

@@ -21,6 +21,9 @@ namespace NServiceBus.Persistence.Sql
                 case SqlVariant.MySql:
                     tableName = $"`{tablePrefix}OutboxData`";
                     break;
+                case SqlVariant.PostgreSql:
+                    tableName = $"{tablePrefix}OutboxData";
+                    break;
                 case SqlVariant.Oracle:
                     tableName = $"{tablePrefix.ToUpper()}OD";
                     break;
@@ -56,6 +59,14 @@ set
     DispatchedAt = @DispatchedAt,
     Operations = '[]'
 where MessageId = @MessageId";
+                case SqlVariant.PostgreSql:
+                    return $@"
+update {tableName}
+set
+    Dispatched = true,
+    DispatchedAt = @DispatchedAt,
+    Operations = '[]'
+where MessageId = @MessageId";
                 case SqlVariant.Oracle:
                     return $@"
 update ""{tableName}""
@@ -75,6 +86,7 @@ where MessageId = :MessageId";
             {
                 case SqlVariant.MsSqlServer:
                 case SqlVariant.MySql:
+                case SqlVariant.PostgreSql:
                     return $@"
 select
     Dispatched,
@@ -99,6 +111,7 @@ where MessageId = :MessageId";
             {
                 case SqlVariant.MsSqlServer:
                 case SqlVariant.MySql:
+                case SqlVariant.PostgreSql:
                     return $@"
 insert into {tableName}
 (
@@ -142,6 +155,7 @@ delete top (@BatchSize) from {tableName}
 where Dispatched = 'true'
     and DispatchedAt < @DispatchedBefore";
                 case SqlVariant.MySql:
+                case SqlVariant.PostgreSql:
                     return $@"
 delete from {tableName}
 where Dispatched = true

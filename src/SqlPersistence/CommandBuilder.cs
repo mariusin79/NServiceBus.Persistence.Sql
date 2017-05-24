@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using Npgsql;
 using NServiceBus.Persistence.Sql;
 
 class CommandBuilder
@@ -20,6 +21,8 @@ class CommandBuilder
             case SqlVariant.MsSqlServer:
             case SqlVariant.MySql:
                 return new CommandWrapper(command);
+            case SqlVariant.PostgreSql:
+                return new PostgreSqlCommandWrapper(command as NpgsqlCommand);
             case SqlVariant.Oracle:
                 return new OracleCommandWrapper(command);
             default:

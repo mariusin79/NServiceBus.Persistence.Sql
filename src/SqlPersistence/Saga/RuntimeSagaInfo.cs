@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NServiceBus;
 using NServiceBus.Persistence.Sql;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
@@ -16,6 +17,7 @@ class RuntimeSagaInfo
     public Type SagaType;
     JsonSerializer jsonSerializer;
     Func<TextReader, JsonReader> readerCreator;
+    // ReSharper disable once NotAccessedField.Local
     Func<TextWriter, JsonWriter> writerCreator;
     ConcurrentDictionary<Version, JsonSerializer> deserializers;
     CommandBuilder commandBuilder;
@@ -73,6 +75,10 @@ class RuntimeSagaInfo
                 TableName = $"`{tablePrefix}{tableSuffix}`";
                 FillParameter = ParameterFiller.Fill;
                 break;
+            case SqlVariant.PostgreSql:
+                TableName = $"{tablePrefix}{tableSuffix}";
+                FillParameter = ParameterFiller.Fill;
+                break;
             case SqlVariant.Oracle:
                 if (tableSuffix.Length > 27)
                 {
@@ -123,7 +129,7 @@ class RuntimeSagaInfo
         return commandBuilder.CreateCommand(connection);
     }
 
-    public string ToJson(IContainSagaData sagaData)
+    public JObject ToJson(IContainSagaData sagaData)
     {
         var originalMessageId = sagaData.OriginalMessageId;
         var originator = sagaData.Originator;
@@ -131,22 +137,17 @@ class RuntimeSagaInfo
         sagaData.OriginalMessageId = null;
         sagaData.Originator = null;
         sagaData.Id = Guid.Empty;
+
         try
         {
-            var builder = new StringBuilder();
-            using (var stringWriter = new StringWriter(builder))
-            using (var writer = writerCreator(stringWriter))
+            try
             {
-                 try
-                 {
-                     jsonSerializer.Serialize(writer, sagaData);
-                 }
-                 catch (Exception exception)
-                 {
-                     throw new SerializationException(exception);
-                 }
+                return JObject.FromObject(sagaData, jsonSerializer);
             }
-            return builder.ToString();
+            catch (Exception exception)
+            {
+                throw new SerializationException(exception);
+            }
         }
         finally
         {

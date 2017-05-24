@@ -18,6 +18,11 @@ namespace NServiceBus.Persistence.Sql
         /// <summary>
         /// Oracle.
         /// </summary>
-        Oracle
+        Oracle,
+
+        /// <summary>
+        /// PostgreSQL.
+        /// </summary>
+        PostgreSql
     }
 }

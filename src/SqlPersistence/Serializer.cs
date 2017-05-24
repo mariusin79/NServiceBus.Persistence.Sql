@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
-using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NServiceBus.Persistence.Sql;
 
 static class Serializer
@@ -33,21 +34,30 @@ static class Serializer
         }
     }
 
-    public static string Serialize(object target)
+    public static object Serialize(object target)
     {
-        var stringBuilder = new StringBuilder();
-        var stringWriter = new StringWriter(stringBuilder);
-        using (var jsonWriter = new JsonTextWriter(stringWriter))
+        if (target is IEnumerable)
         {
-            try
-            {
-                JsonSerializer.Serialize(jsonWriter, target);
-            }
-            catch (Exception exception)
-            {
-                throw new SerializationException(exception);
-            }
+            return JArray.FromObject(target, JsonSerializer);
         }
-        return stringBuilder.ToString();
+        else
+        {
+            return JObject.FromObject(target, JsonSerializer);
+        }
+
+        //var stringBuilder = new StringBuilder();
+        //var stringWriter = new StringWriter(stringBuilder);
+        //using (var jsonWriter = new JsonTextWriter(stringWriter))
+        //{
+        //    try
+        //    {
+        //        JsonSerializer.Serialize(jsonWriter, target);
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        throw new SerializationException(exception);
+        //    }
+        //}
+        //return stringBuilder.ToString();
     }
 }

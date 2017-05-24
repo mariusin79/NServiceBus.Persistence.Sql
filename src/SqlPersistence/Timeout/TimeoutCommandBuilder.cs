@@ -16,6 +16,8 @@ namespace NServiceBus.Persistence.Sql
             {
                 case SqlVariant.MySql:
                     return BuildMySqlCommands($"`{tablePrefix}TimeoutData`");
+                case SqlVariant.PostgreSql:
+                    return BuildMySqlCommands($"{tablePrefix}TimeoutData");
                 case SqlVariant.MsSqlServer:
                     return BuildSqlServerCommands($"[{schema}].[{tablePrefix}TimeoutData]");
                 case SqlVariant.Oracle:

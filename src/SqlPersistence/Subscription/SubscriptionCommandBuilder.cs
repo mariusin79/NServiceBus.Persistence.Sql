@@ -28,6 +28,10 @@ namespace NServiceBus.Persistence.Sql
                     tableName = $"`{tablePrefix}SubscriptionData`";
                     break;
 
+                case SqlVariant.PostgreSql:
+                    tableName = $"{tablePrefix}SubscriptionData";
+                    break;
+
                 case SqlVariant.Oracle:
                     tableName = $"{tablePrefix.ToUpper()}SS";
                     break;
@@ -96,6 +100,26 @@ on duplicate key update
     PersistenceVersion = @PersistenceVersion
 ";
 
+                case SqlVariant.PostgreSql:
+                    return $@"
+insert into {tableName}
+(
+    Subscriber,
+    MessageType,
+    Endpoint,
+    PersistenceVersion
+)
+values
+(
+    @Subscriber,
+    @MessageType,
+    @Endpoint,
+    @PersistenceVersion
+)
+on conflict (Subscriber, MessageType) do update
+    set Endpoint = @Endpoint,
+    PersistenceVersion = @PersistenceVersion
+";
                 case SqlVariant.Oracle:
                     return $@"
 begin

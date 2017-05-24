@@ -14,6 +14,8 @@ public static class SqlVariantConverter
                 return BuildSqlVariant.MySql;
             case SqlVariant.Oracle:
                 return BuildSqlVariant.Oracle;
+            case SqlVariant.PostgreSql:
+                return BuildSqlVariant.PostgreSql;
             default:
                 throw new Exception($"Unknown SqlVariant: {sqlVariant}.");
         }
@@ -28,6 +30,8 @@ public static class SqlVariantConverter
                 return SqlVariant.MySql;
             case BuildSqlVariant.Oracle:
                 return SqlVariant.Oracle;
+            case BuildSqlVariant.PostgreSql:
+                return SqlVariant.PostgreSql;
             default:
                 throw new Exception($"Unknown SqlVariant: {sqlVariant}.");
         }

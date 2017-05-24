@@ -90,6 +90,10 @@ namespace NServiceBus.Persistence.Sql.ScriptBuilder
             {
                 return new OracleSagaScriptWriter(textWriter, saga);
             }
+            if (sqlVariant == BuildSqlVariant.PostgreSql)
+            {
+                return new PostgreSqlServerSagaScriptWriter(textWriter, saga);
+            }
 
             throw new Exception($"Unknown SqlVariant {sqlVariant}.");
         }
