@@ -36,15 +36,19 @@ static class Serializer
 
     public static object Serialize(object target)
     {
-        if (target is IEnumerable)
+        try
         {
-            return JArray.FromObject(target, JsonSerializer);
-        }
-        else
-        {
+            if (target is IEnumerable && !(target is IDictionary))
+            {
+                return JArray.FromObject(target, JsonSerializer);
+            }
+
             return JObject.FromObject(target, JsonSerializer);
         }
-
+        catch (Exception exception)
+        {
+            throw new SerializationException(exception);
+        }
         //var stringBuilder = new StringBuilder();
         //var stringWriter = new StringWriter(stringBuilder);
         //using (var jsonWriter = new JsonTextWriter(stringWriter))
