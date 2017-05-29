@@ -5,7 +5,7 @@ BEGIN
 
 	sqlStatement =  concat('
 		create table if not exists ', tableName, '(
-			Id uuid not null,
+			Id varchar(36) not null,
 			Destination varchar(200),
 			SagaId uuid,
 			State bytea,
