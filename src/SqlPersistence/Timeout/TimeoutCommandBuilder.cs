@@ -15,11 +15,11 @@ namespace NServiceBus.Persistence.Sql
             switch (sqlVariant)
             {
                 case SqlVariant.MySql:
-                    return BuildMySqlCommands($"`{tablePrefix}TimeoutData`");
+                    return BuildMySqlOrPostgreSqlCommands($"`{tablePrefix}TimeoutData`");
                 case SqlVariant.PostgreSql:
                     var tableName = $"{tablePrefix}TimeoutData";
                     tableName = tableName.Length <= 63 ? tableName : $"{tableName.Substring(tableName.Length - 63)}";
-                    return BuildMySqlCommands(tableName);
+                    return BuildMySqlOrPostgreSqlCommands(tableName);
                 case SqlVariant.MsSqlServer:
                     return BuildSqlServerCommands($"[{schema}].[{tablePrefix}TimeoutData]");
                 case SqlVariant.Oracle:
@@ -29,7 +29,7 @@ namespace NServiceBus.Persistence.Sql
             }
         }
 
-        static TimeoutCommands BuildMySqlCommands(string tableName)
+        static TimeoutCommands BuildMySqlOrPostgreSqlCommands(string tableName)
         {
             var insertCommandText = $@"
 insert into {tableName}
