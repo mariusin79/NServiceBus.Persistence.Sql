@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Npgsql.Logging;
 using NServiceBus;
 using NServiceBus.AcceptanceTesting.Support;
 using NServiceBus.Persistence.Sql;
@@ -12,6 +13,11 @@ public class ConfigureEndpointSqlPersistence : IConfigureEndpointTestExecution
 
     public Task Configure(string endpointName, EndpointConfiguration configuration, RunSettings settings, PublisherMetadata publisherMetadata)
     {
+        if (NpgsqlLogManager.Provider == null)
+        {
+            NpgsqlLogManager.Provider = new ConsoleLoggingProvider(NpgsqlLogLevel.Debug, printConnectorId: true);
+        }
+
         if (configuration.IsSendOnly())
         {
             return Task.FromResult(0);

@@ -171,9 +171,9 @@ execute sqlStatement;
         {
             writer.Write($@"
 DO $$
-DECLARE tablename text; tablePrefix text; sqlStatement text;
+DECLARE tablename text; sqlStatement text;
 BEGIN
-    tablename = concat(tablePrefix, '{tableName}');
+    tablename = right(concat(@tablePrefix, '{tableName}'), 63);
     sqlStatement = concat('drop table if exists ', tablename);
     execute sqlStatement;
 END;
