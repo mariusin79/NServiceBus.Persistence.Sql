@@ -85,7 +85,7 @@ end if;
             var name = correlationProperty.Name.ToLower();
 
             writer.Write($@"
-sqlStatement = concat('create unique index if not exists index_Correlation_{name} on ', tableNameNonQuoted, '(correlation_{name})');
+sqlStatement = concat('create unique index if not exists index_correlation_{name}_{tableName} on ', tableNameNonQuoted, '(correlation_{name})');
 execute sqlStatement;
 ");
         }
@@ -97,12 +97,12 @@ execute sqlStatement;
             var correlation = saga.CorrelationProperty;
             if (correlation != null)
             {
-                builder.Append($" and indexname <> 'index_correlation_{correlation.Name.ToLower()}'");
+                builder.Append($" and indexname <> 'index_correlation_{correlation.Name.ToLower()}_{tableName}'");
             }
             var transitional = saga.TransitionalCorrelationProperty;
             if (transitional != null)
             {
-                builder.Append($" and indexname <> 'index_correlation_{transitional.Name.ToLower()}'");
+                builder.Append($" and indexname <> 'index_correlation_{transitional.Name.ToLower()}_{tableName}'");
             }
 
             writer.Write($@"
