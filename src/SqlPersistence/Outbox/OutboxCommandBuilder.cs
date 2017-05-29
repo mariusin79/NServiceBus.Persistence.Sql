@@ -23,6 +23,7 @@ namespace NServiceBus.Persistence.Sql
                     break;
                 case SqlVariant.PostgreSql:
                     tableName = $"{tablePrefix}OutboxData";
+                    tableName = tableName.Length <= 63 ? tableName : $"{tableName.Substring(tableName.Length - 63)}";
                     break;
                 case SqlVariant.Oracle:
                     tableName = $"{tablePrefix.ToUpper()}OD";

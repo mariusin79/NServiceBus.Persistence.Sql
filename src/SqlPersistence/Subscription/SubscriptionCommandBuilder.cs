@@ -30,6 +30,7 @@ namespace NServiceBus.Persistence.Sql
 
                 case SqlVariant.PostgreSql:
                     tableName = $"{tablePrefix}SubscriptionData";
+                    tableName = tableName.Length <= 63 ? tableName : $"{tableName.Substring(tableName.Length - 63)}";
                     break;
 
                 case SqlVariant.Oracle:

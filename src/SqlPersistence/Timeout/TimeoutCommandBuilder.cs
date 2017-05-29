@@ -17,7 +17,9 @@ namespace NServiceBus.Persistence.Sql
                 case SqlVariant.MySql:
                     return BuildMySqlCommands($"`{tablePrefix}TimeoutData`");
                 case SqlVariant.PostgreSql:
-                    return BuildMySqlCommands($"{tablePrefix}TimeoutData");
+                    var tableName = $"{tablePrefix}TimeoutData";
+                    tableName = tableName.Length <= 63 ? tableName : $"{tableName.Substring(tableName.Length - 63)}";
+                    return BuildMySqlCommands(tableName);
                 case SqlVariant.MsSqlServer:
                     return BuildSqlServerCommands($"[{schema}].[{tablePrefix}TimeoutData]");
                 case SqlVariant.Oracle:

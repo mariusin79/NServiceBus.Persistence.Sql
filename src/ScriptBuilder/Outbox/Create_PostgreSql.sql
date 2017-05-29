@@ -1,7 +1,7 @@
 ﻿DO $$
 DECLARE tableName text; sqlStatement text;
 BEGIN
-    tableName = concat(@tablePrefix, 'OutboxData');
+	tableName = right(concat(@tablePrefix, 'OutboxData'), 63);
 
 	sqlStatement =  concat('
 		create table if not exists ', tableName, '(
