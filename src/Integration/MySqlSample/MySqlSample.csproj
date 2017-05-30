@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyName>MySqlSample</AssemblyName>
     <PackageId>MySqlSample</PackageId>
-    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <OutputType>exe</OutputType>
@@ -14,11 +14,11 @@
     <None Include="App.config" />
     <PackageReference Include="MySql.Data" Version="6.9.9" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
-    <PackageReference Include="NServiceBus" Version="6.2.0" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <PackageReference Include="NServiceBus" Version="6.2.1" />
+    <ProjectReference Include="$(SolutionDir)Integration\Shared\Shared.csproj" />
     <Reference Include="NServiceBus.Persistence.Sql">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ForIntegration\NServiceBus.Persistence.Sql.dll</HintPath>
+      <HintPath>$(SolutionDir)ForIntegration\NServiceBus.Persistence.Sql.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
